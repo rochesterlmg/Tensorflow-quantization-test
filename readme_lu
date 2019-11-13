@@ -1,0 +1,60 @@
+vgg16.py
+
+def quantize(weights):
+    abs_weights = np.abs(weights)
+    vmax = 1#np.max(abs_weights)
+    s = 1#vmax / 127.
+    qweights = weights *128#/ s
+    qweights = np.round(qweights)/128.0
+
+    #qweights = qweights.astype(np.int8)
+    return qweights, s
+
+regnet50.py
+
+def quantize(weights):
+    abs_weights = np.abs(weights)
+    vmax = 1#np.max(abs_weights)
+    s = 1#vmax / 127.
+    qweights = weights *128#/ s
+    qweights = np.round(qweights)/128.0
+
+    #qweights = qweights.astype(np.int8)
+    return qweights, s
+
+
+layer.py
+
+def quantize_ok_resnet50(x):#ok for resnet 50
+    #abs_value = tf.abs(x)
+    #vmax = tf.reduce_max(abs_value)
+    s = 1#tf.divide(vmax, 127.)
+    #x = tf.divide(x, s)
+    #x = tf.round(x)
+    
+    x = tf.clip_by_value(x,-128, 127)
+
+    return x, s
+
+def quantize_ok_vgg(x):#ok for resnet vgg
+    #abs_value = tf.abs(x)
+    #vmax = tf.reduce_max(abs_value)
+    s = 1#tf.divide(vmax, 127.)
+    #x = tf.divide(x, s)
+    x = tf.round(x)
+    
+    #x = tf.clip_by_value(x,-128, 127)
+
+    return x, s
+
+def quantize_ok_original(x):
+    abs_value = tf.abs(x)
+    vmax = tf.reduce_max(abs_value)
+    s = tf.divide(vmax, 127.)
+    x = tf.divide(x, s)
+    x = tf.round(x)
+    #x = tf.rint(x)
+    return x, s
+
+
+
